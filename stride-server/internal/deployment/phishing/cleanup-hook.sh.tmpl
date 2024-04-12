@@ -1,0 +1,38 @@
+#!/bin/bash
+
+echo "Skipping TXT record deletion for debugging purposes."
+
+# Comment out or remove the deletion logic below for debugging purposes.
+# Remember to restore this logic after debugging to avoid leaving unnecessary TXT records in your DNS.
+: <<'END'
+# DigitalOcean API token
+DO_API_TOKEN={{DO_API_TOKEN}}
+
+# Extract the second-level domain from CERTBOT_DOMAIN
+SLD="${CERTBOT_DOMAIN#*.}"
+
+# Name of the TXT record
+RECORD_NAME="_acme-challenge.${CERTBOT_DOMAIN}"
+
+# Retrieve the record ID of the TXT record
+record_id=$(curl -s -X GET "https://api.digitalocean.com/v2/domains/$SLD/records?name=$RECORD_NAME&type=TXT" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DO_API_TOKEN" | jq -r '.domain_records[0].id')
+
+# Delete the TXT record
+if [[ -n $record_id ]]; then
+  response=$(curl -s -X DELETE "https://api.digitalocean.com/v2/domains/$SLD/records/$record_id" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $DO_API_TOKEN")
+
+  if echo "$response" | grep -q "\"status\":\"OK\""; then
+    echo "TXT record deleted successfully."
+  else
+    echo "Failed to delete TXT record. Response: $response" >&2
+  fi
+else
+  echo "TXT record not found for deletion."
+fi
+END
+
+exit 0

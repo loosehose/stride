@@ -1,0 +1,38 @@
+.info-box {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.info-content p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.info-content strong {
+    font-weight: bold;
+}
+
+.info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: #007bff;
+    margin-right: 20px;
+}
+
+.info-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.info-content p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.info-content strong {
+    font-weight: bold;
+}

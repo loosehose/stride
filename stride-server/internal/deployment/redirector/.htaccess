@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteRule ^.*$ https://{{TEAMSERVER_IP}}%{REQUEST_URI} [P]
+# Redirect all other traffic
+RewriteRule ^.*$ https://google.com/? [L,R=302]

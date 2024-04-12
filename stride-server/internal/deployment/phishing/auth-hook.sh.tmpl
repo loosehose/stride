@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# DigitalOcean API token
+DO_API_TOKEN={{DO_API_TOKEN}}
+
+# Extract the second-level domain from CERTBOT_DOMAIN
+SLD="${CERTBOT_DOMAIN#*.}"
+
+# Name of the TXT record
+RECORD_NAME="_acme-challenge.${CERTBOT_DOMAIN}"
+
+# Data for the DNS record
+RECORD_DATA="{\"type\":\"TXT\",\"name\":\"${RECORD_NAME}\",\"data\":\"$CERTBOT_VALIDATION\",\"ttl\":300}"
+
+# Add the TXT record
+response=$(curl -s -X POST "https://api.digitalocean.com/v2/domains/$SLD/records" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $DO_API_TOKEN" \
+    -d "$RECORD_DATA")
+
+# Log the actual TXT record for diagnostic purposes
+echo "Attempting to add TXT record: $RECORD_NAME with value $CERTBOT_VALIDATION"
+
+# Simple error handling
+if echo "$response" | grep -q "id"; then
+    echo "TXT record added successfully."
+else
+    echo "Failed to add TXT record. Response: $response" >&2
+    exit 1
+fi
+
+# Increase sleep to ensure the record has propagated through DNS
+echo "Waiting for DNS propagation. This may take some time."
+sleep 120  # Increase if necessary, based on your typical DNS propagation times
