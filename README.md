@@ -4,7 +4,7 @@ Stride is a powerful open-source tool designed to simplify and streamline the pr
 
 ## Dashboard Screenshot
 <p align="center">
-  <img src="./images/dashboard-view.png" alt="Stride Dashboard"> 
+  <img src="./images/dashboard.png" alt="Stride Dashboard"> 
 </p>
 
 ## Features
